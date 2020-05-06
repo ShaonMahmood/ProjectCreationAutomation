@@ -31,19 +31,22 @@ def create_project(username, password, project_directory="MyProjects", project_n
         os.chdir(project_dir_path)
         subprocess.run('git init', shell=True)
         time.sleep(2)
+        python_venv_version = ""
         readme_command = ''
         copy_command = ''
 
         if platform.system() == "Windows":
             readme_command = 'type nul > README.md'
             copy_command = f'copy {gitignore_file} {project_dir_path}'
+            python_venv_version = "python"
             
         else:
             readme_command = 'touch README.md'
             copy_command = f'cp {gitignore_file} {project_dir_path}'
+            python_venv_version = "python3"
 
         subprocess.run(readme_command, shell=True)
-        subprocess.run(f'python3 -m venv {venv_name}_venv', shell=True)
+        subprocess.run(f'{python_venv_version} -m venv {venv_name}_venv', shell=True)
         time.sleep(2)
         # copy_command = f'cp {gitignore_file} {project_dir_path}'
         print(f'copy command: {copy_command}')
