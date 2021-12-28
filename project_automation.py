@@ -15,7 +15,7 @@ class mywindow(QtWidgets.QMainWindow):
 
         self.ui.create_button.clicked.connect(self.on_button_clicked)
         self.ui.create_button.setToolTip("Click Here to Create Project")
-        self.ui.password_text.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.ui.usertoken_text.setEchoMode(QtWidgets.QLineEdit.Password)
 
 
 
@@ -26,12 +26,12 @@ class mywindow(QtWidgets.QMainWindow):
                                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                      QtWidgets.QMessageBox.No)
         if buttonReply == QtWidgets.QMessageBox.Yes:
-            username = self.ui.username_text.text()
-            password = self.ui.password_text.text()
+            user_token = self.ui.usertoken_text.text()
+            user_name = self.ui.username_text.text()
             project_directory = self.ui.project_directory_text.text()
             project_name = self.ui.project_name_text.text()
             venv_name = self.ui.venv_text.text()
-            response = create_project(username,password,project_directory,project_name,venv_name)
+            response = create_project(user_name, user_token,project_directory,project_name,venv_name)
 
             if response == 1:
                 show_message("project created successfully")
@@ -39,7 +39,7 @@ class mywindow(QtWidgets.QMainWindow):
                 self.ui.project_name_text.setText("")
                 self.ui.venv_text.setText("")
             elif response == 0:
-                show_message("wrong username and password")
+                show_message("wrong usertoken/username, check your inputs")
 
             else:
                 show_message("project with the same name is already created")

@@ -2,28 +2,42 @@ import sys, subprocess, platform
 import os,time
 from github import Github
 
-def create_git_repo(projectName,username, password):
+def create_git_repo(projectName, user_name, user_token):
+
+    # Login with usertoken
     try:
-        user = Github(username, password).get_user()
+        user = Github(user_token).get_user()
+        username_from_github = user.login
     except Exception as e:
-        print("Username and password wrong")
+        print("Usertoken wrong")
         return False
-    repo = user.create_repo(projectName)
-    print("Succesfully created repository {}".format(projectName))
+
+    if user_name != username_from_github:
+        print(f"Wrong Username, given: {user_name}, got: {username_from_github}")
+        return False
+    
+    # Create Repo
+    try:
+        repo = user.create_repo(projectName)
+        print("Succesfully created repository {}".format(projectName))
+    except Exception as e:
+        print("repo can not be created")
+        return False
     return True
 
-def create_project(username, password, project_directory="MyProjects", project_name="NewProject", venv_name=""):
+def create_project(username, user_token, project_directory="MyProjects", project_name="NewProject", venv_name=""):
     present_dirname, present_filename = os.path.split(os.path.abspath(__file__))
     root = os.path.dirname(present_dirname)
     gitignore_file = os.path.join(root, '.gitignore')
 
     print(f"root is {root}, gitignore file is {gitignore_file}\n")
 
-    remote_url = f'https://github.com/ShaonMahmood/{project_name}.git'
+    remote_url = f'https://github.com/{username}/{project_name}.git'
     home_dir = os.path.expanduser('~')
     project_dir_path = os.path.join(home_dir, project_directory, project_name)
     if not os.path.isdir(project_dir_path):
-        if create_git_repo(project_name, username, password):
+        successful_git_repo_creation = create_git_repo(project_name, username, user_token)
+        if successful_git_repo_creation:
             pass
         else:
             return 0
